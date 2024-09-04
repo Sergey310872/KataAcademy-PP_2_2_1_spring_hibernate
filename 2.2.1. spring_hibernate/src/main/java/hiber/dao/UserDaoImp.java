@@ -11,19 +11,27 @@ import java.util.List;
 @Repository
 public class UserDaoImp implements UserDao {
 
-   @Autowired
-   private SessionFactory sessionFactory;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-   @Override
-   public void add(User user) {
-      sessionFactory.getCurrentSession().save(user);
-   }
+    @Override
+    public void add(User user) {
+        sessionFactory.getCurrentSession().save(user);
+    }
 
-   @Override
-   @SuppressWarnings("unchecked")
-   public List<User> listUsers() {
-      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
-      return query.getResultList();
-   }
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<User> listUsers() {
+        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User");
+        return query.getResultList();
+    }
 
+    @Override
+    public List<User> getUserCar(String model, int series) {
+        String hql = "from User where car.model = :modelCar and car.series = :series";
+        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery(hql, User.class);
+        query.setParameter("modelCar", model);
+        query.setParameter("series", series);
+        return query.getResultList();
+    }
 }
